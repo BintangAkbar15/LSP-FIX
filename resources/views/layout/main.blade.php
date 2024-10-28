@@ -9,10 +9,13 @@
 <body>
     <br>
     <div style="text-align: center;">
-        <a href="/dashboard">DASHBOARD</a> |
-        <a href="/nilai-raport/index">NILAI RAPORT</a> |
-        <a href="">NILAI RAPORT SISWA</a> |
-        <a href="/logout">LOGOUT</a>
+            <a href="/dashboard">DASHBOARD</a> |
+       @if (session('role') == 'Walas')
+            <a href="/nilai-raport/index">NILAI RAPORT</a> |
+       @else
+            <a href="/nilai-raport/show">NILAI RAPORT SISWA</a> |
+       @endif 
+            <a href="/logout">LOGOUT</a>
     </div> 
     <div style="text-align: center;">
         @yield('content')

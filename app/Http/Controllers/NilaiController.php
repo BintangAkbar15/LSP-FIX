@@ -10,6 +10,20 @@ use Illuminate\Http\Request;
 
 class NilaiController extends Controller
 {
+    public function gradeMapel($nilai)
+    {
+        if ($nilai >= 90) {
+            return 'A';
+        } elseif ($nilai >= 80) {
+            return 'B';
+        } elseif ($nilai >= 70) {
+            return 'C';
+        } elseif ($nilai >= 60) {
+            return 'D';
+        } else {
+            return 'E';
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -91,11 +105,48 @@ class NilaiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
-    }
+        // Coba untuk mendapatkan siswa berdasarkan ID di session
+        $siswa = Siswa::with(['kelas', 'nilai'])->find(session('id'));
+    
+        // Jika siswa tidak ditemukan, kembalikan pesan error
+        if (!$siswa) {
+            return redirect()->back()->with('error', 'Data siswa tidak ditemukan.');
+        }
+        
+        $data_nilai = [
+            'matematika' => [
+                'nilai' => $siswa->nilai->matematika,
+                'grade' => $this->gradeMapel($siswa->nilai->matematika)
+            ],
+            'indonesia' => [
+                'nilai' => $siswa->nilai->indonesia,
+                'grade' => $this->gradeMapel($siswa->nilai->indonesia)
+            ],
+            'inggris' => [
+                'nilai' => $siswa->nilai->inggris,
+                'grade' => $this->gradeMapel($siswa->nilai->inggris)
+            ],
+            'kejuruan' => [
+                'nilai' => $siswa->nilai->kejuruan,
+                'grade' => $this->gradeMapel($siswa->nilai->kejuruan)
+            ],
+            'pilihan' => [
+                'nilai' => $siswa->nilai->pilihan,
+                'grade' => $this->gradeMapel($siswa->nilai->pilihan)
+            ],
+            'rata_rata' => [
+                'nilai' => $siswa->nilai->rata_rata,
+                'grade' => $this->gradeMapel($siswa->nilai->rata_rata)
+            ]
+        ];
 
+        return view('nilai.show', [
+            'siswa' => $siswa,
+            'data_nilai' => $data_nilai 
+        ]);
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -115,7 +166,6 @@ class NilaiController extends Controller
             'siswa' => $siswa
         ]);
     }
-
     /**
      * Update the specified resource in storage.
      *

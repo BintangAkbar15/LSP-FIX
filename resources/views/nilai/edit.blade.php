@@ -16,7 +16,6 @@
         <select name="siswa_id" id="siswa_id" required>
             <option value="">Pilih Siswa</option>
             @foreach($siswa as $each)
-                {{-- <option value="{{ $each->id }}" @if ($each->id == $data_nilai->siswa_id) selected @endif>{{ $each->nama_siswa }}</option> --}}
                 @if ($nilai->siswa_id == $each->id)
                     <option value="{{ $each->id }}" selected>{{ $each->nama_siswa }}</option>                    
                 @else

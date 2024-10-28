@@ -25,7 +25,7 @@
                     <th>BAHASA INDONESIA</th>
                     <th>BAHASA INGGRIS</th>
                     <th>KEJURUAN</th>
-                    <th>MAPEL PILIHAN - GAME</th>
+                    <th>MATA PELAJARAN PILIHAN</th>
                     <th>RATA - RATA</th>
                     <th>ACTION</th>
                 </tr>
@@ -42,8 +42,6 @@
                         <td>{{ $each->pilihan }}</td>
                         <td>{{ $each->rata_rata }}</td>
                         <td style="text-align: center">
-                            {{-- <a href="/nilai/edit/{{ $idKelas }}/{{ $each->id }}" class="button-warning">EDIT</a>
-                            <a href="/nilai/destroy/{{ $each->id }}" onclick="return confirm('Yakin Hapus?')" class="button-danger">HAPUS</a> --}}
                             <a href="/nilai-raport/edit/{{ $each->id }}" class="button-warning">EDIT</a>
                             <a href="/nilai-raport/destroy/{{ $each->id }}" onclick="return confirm('Yakin Hapus?')" class="button-danger">HAPUS</a>
                         </td>
