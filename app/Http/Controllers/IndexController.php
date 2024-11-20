@@ -11,11 +11,6 @@ use Illuminate\Support\Facades\Hash;
 class IndexController extends Controller
 {
     
-    public function dashboard()
-    {
-        return view ('dashboard');
-    }
-
     public function index()
     {
         return view('login');
@@ -39,7 +34,7 @@ class IndexController extends Controller
             'kelas_id' => $walas->kelas_id,
             'nama_kelas' => $kelas ? $kelas->nama_kelas : 'Kelas Belum ditentukan',
         ]);
-        return redirect('/dashboard');
+        return redirect('nilai-raport/index');
         
     }
     public function loginSiswa(Request $request)
@@ -52,14 +47,14 @@ class IndexController extends Controller
 
         $kelas = Kelas::where('id', $siswa->kelas_id)->first();
         session([
-            'role' => 'Siswa/i',
+            'role' => 'Murid',
             'id' => $siswa->id,
             'nis' => $siswa->nis,
             'nama' => $siswa->nama_siswa,
             'kelas_id' => $siswa->kelas_id,
             'nama_kelas' => $siswa ? $kelas->nama_kelas : 'Kelas Belum ditentukan',
         ]);
-        return redirect('/dashboard');
+        return redirect('nilai-raport/show');
     }
 
     public function logout(){

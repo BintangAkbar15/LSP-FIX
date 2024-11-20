@@ -24,52 +24,40 @@ class NilaiController extends Controller
             return 'E';
         }
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+   
     public function index()
     {
         // Dapatkan walas yang sedang login
         $walas = Walas::find(session('id'));
 
-        // if (!$walas) {
-        //     return back()->with('error', 'Data wali kelas tidak ditemukan');
-        // }
+        if (!$walas) {
+            return back()->with('error', 'Data wali kelas tidak ditemukan');
+        }
 
         // Ambil semua data nilai dari siswa yang kelasnya sama dengan walas
         $data_nilai = Nilai::whereHas('siswa', function ($query) use ($walas) {
             $query->where('kelas_id', $walas->kelas_id);
         })->with('siswa')->get();
+        $kelas = Kelas::where('id',session('id'))->first();
 
         // Kirim data ke view
-        return view('nilai.index', compact('data_nilai'));
+        return view('nilai.index', compact(['data_nilai','kelas']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         // Mendapatkan wali kelas yang sedang login
         $walas = Walas::find(session('id'));
-
+        $nilai = Nilai::pluck('siswa_id');
+        
         // Mengambil siswa yang memiliki kelas_id yang sama dengan walas yang sedang login
-        $siswa = Siswa::where('kelas_id', $walas->kelas_id)->get();
+        $siswa = Siswa::where('kelas_id', $walas->kelas_id)->whereNotIn('id', $nilai)->get();
 
         return view('nilai.create', [
             'siswa' => $siswa
         ]);
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $data_nilai = $request->validate([
@@ -99,80 +87,105 @@ class NilaiController extends Controller
             return redirect("/nilai-raport/index")->with('success', 'Data nilai berhasil ditambahkan');
         }
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show()
-    {
-        // Coba untuk mendapatkan siswa berdasarkan ID di session
-        $siswa = Siswa::with(['kelas', 'nilai'])->find(session('id'));
     
-        // Jika siswa tidak ditemukan, kembalikan pesan error
-        if (!$siswa) {
-            return redirect()->back()->with('error', 'Data siswa tidak ditemukan.');
-        }
-        
+    public function showNilai($id)
+    {
+        $siswa = Siswa::with(['kelas', 'nilai'])->find($id);
+
+        $nilai = optional($siswa->nilai)->first();
+
+        $walas = Nilai::with('walas')->first();
+
         $data_nilai = [
             'matematika' => [
-                'nilai' => $siswa->nilai->matematika,
-                'grade' => $this->gradeMapel($siswa->nilai->matematika)
+                'nilai' => $nilai->matematika ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->matematika) : 'N/A'
             ],
             'indonesia' => [
-                'nilai' => $siswa->nilai->indonesia,
-                'grade' => $this->gradeMapel($siswa->nilai->indonesia)
+                'nilai' => $nilai->indonesia ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->indonesia) : 'N/A'
             ],
             'inggris' => [
-                'nilai' => $siswa->nilai->inggris,
-                'grade' => $this->gradeMapel($siswa->nilai->inggris)
+                'nilai' => $nilai->inggris ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->inggris) : 'N/A'
             ],
             'kejuruan' => [
-                'nilai' => $siswa->nilai->kejuruan,
-                'grade' => $this->gradeMapel($siswa->nilai->kejuruan)
+                'nilai' => $nilai->kejuruan ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->kejuruan) : 'N/A'
             ],
             'pilihan' => [
-                'nilai' => $siswa->nilai->pilihan,
-                'grade' => $this->gradeMapel($siswa->nilai->pilihan)
+                'nilai' => $nilai->pilihan ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->pilihan) : 'N/A'
             ],
             'rata_rata' => [
-                'nilai' => $siswa->nilai->rata_rata,
-                'grade' => $this->gradeMapel($siswa->nilai->rata_rata)
+                'nilai' => $nilai->rata_rata ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->rata_rata) : 'N/A'
             ]
         ];
 
         return view('nilai.show', [
             'siswa' => $siswa,
-            'data_nilai' => $data_nilai 
+            'data_nilai' => $data_nilai,
+            'walas' => $walas,
         ]);
     }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
+    public function show()
+    {
+        $siswa = Siswa::with(['kelas', 'nilai'])->find(session('id'));
+
+        $nilai = optional($siswa->nilai)->first();
+
+        $walas = Nilai::with('walas')->first();
+
+        $data_nilai = [
+            'matematika' => [
+                'nilai' => $nilai->matematika ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->matematika) : 'N/A'
+            ],
+            'indonesia' => [
+                'nilai' => $nilai->indonesia ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->indonesia) : 'N/A'
+            ],
+            'inggris' => [
+                'nilai' => $nilai->inggris ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->inggris) : 'N/A'
+            ],
+            'kejuruan' => [
+                'nilai' => $nilai->kejuruan ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->kejuruan) : 'N/A'
+            ],
+            'pilihan' => [
+                'nilai' => $nilai->pilihan ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->pilihan) : 'N/A'
+            ],
+            'rata_rata' => [
+                'nilai' => $nilai->rata_rata ?? 'Data tidak tersedia',
+                'grade' => $nilai ? $this->gradeMapel($nilai->rata_rata) : 'N/A'
+            ]
+        ];
+
+        return view('nilai.show', [
+            'siswa' => $siswa,
+            'data_nilai' => $data_nilai,
+            'walas' => $walas,
+        ]);
+    }
+
     public function edit(Nilai $nilai)
     {
         // Mendapatkan wali kelas yang sedang login
         $walas = Walas::find(session('id'));
 
         // Mengambil siswa yang memiliki kelas_id yang sama dengan walas yang sedang login
-        $siswa = Siswa::where('kelas_id', $walas->kelas_id)->get();
+        $siswa = Siswa::where('id', $nilai->siswa_id)->first();
 
         return view('nilai.edit', [
             'nilai' => $nilai,
             'siswa' => $siswa
         ]);
     }
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Nilai $nilai)
     {
         // Validasi data
@@ -195,15 +208,9 @@ class NilaiController extends Controller
         ) / 5);
 
         // Cek apakah ada data nilai lain untuk siswa yang sama, kecuali data yang sedang diupdate
-        $cek_nilai = Nilai::where('siswa_id', $request->siswa_id)->where('id', '!=', $nilai->id)->first();
-
-        if ($cek_nilai) {
-            return back()->with('error', 'Data nilai untuk siswa tersebut sudah ada');
-        } else {
             // Lakukan update data
             $nilai->update($data_nilai);
             return redirect("/nilai-raport/index")->with('success', 'Data nilai berhasil diubah');
-        }
     }
     /**
      * Remove the specified resource from storage.

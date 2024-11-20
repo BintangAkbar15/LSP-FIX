@@ -1,10 +1,10 @@
 @extends('layout.main')
-
+@section('name')
+    <h3>Laporan Nilai {{ $siswa->nama_siswa }}</h3>
+@endsection
 @section('content')
 <center>
-    <h3>
-        Laporan Hasil Belajar
-        <table align="center">
+        <table align="center" cellspacing="0" class="table-show">
             <tr>
                 <td>Nama Siswa</td>
                 <td>:</td>
@@ -16,60 +16,63 @@
                 <td>{{ $siswa->nis }}</td>
             </tr>
             <tr>
+                <td>Nama Walas</td>
+                <td>:</td>
+                <td>{{ $walas->walas->nama_walas }}</td>
+            </tr>
+            <tr>
                 <td>Kelas</td>
                 <td>:</td>
                 <td>{{ $siswa->kelas->nama_kelas }}</td>
             </tr>
         </table>
-        <table border="1px">
+        <table class="table-show table-view">
            <thead>
                 <tr>
-                    <th>No</th>
-                    <th>Mata Pelajaran</th>
-                    <th>Nilai</th>
-                    <th>Grade</th>
+                    <th class="border-head">No</th>
+                    <th class="border-head">Mata Pelajaran</th>
+                    <th class="border-head">Nilai</th>
+                    <th class="border-head">Grade</th>
                 </tr>
            </thead>
            <tbody>
                 <tr>
-                    <td>1</td>
-                    <td>Matematika</td>
-                    <td>{{ $data_nilai['matematika']['nilai'] }}</td>
-                    <td>{{ $data_nilai['matematika']['grade'] }}</td>
+                    <td class="border-data">1</td>
+                    <td class="border-data">Matematika</td>
+                    <td class="border-data">{{ $data_nilai['matematika']['nilai'] }}</td>
+                    <td class="border-data">{{ $data_nilai['matematika']['grade'] }}</td>
                 </tr>
                 <tr>
-                    <td>2</td>
-                    <td>Bahasa Indonesia</td>
-                    <td>{{ $data_nilai['indonesia']['nilai'] }}</td>
-                    <td>{{ $data_nilai['indonesia']['grade'] }}</td>
+                    <td class="border-data">2</td>
+                    <td class="border-data">Bahasa Indonesia</td>
+                    <td class="border-data">{{ $data_nilai['indonesia']['nilai'] }}</td>
+                    <td class="border-data">{{ $data_nilai['indonesia']['grade'] }}</td>
                 </tr>
                 <tr>
-                    <td>3</td>
-                    <td>Bahasa Inggris</td>
-                    <td>{{ $data_nilai['inggris']['nilai'] }}</td>
-                    <td>{{ $data_nilai['inggris']['grade'] }}</td>
+                    <td class="border-data">3</td>
+                    <td class="border-data">Bahasa Inggris</td>
+                    <td class="border-data">{{ $data_nilai['inggris']['nilai'] }}</td>
+                    <td class="border-data">{{ $data_nilai['inggris']['grade'] }}</td>
                 </tr>
                 <tr>
-                    <td>4</td>
-                    <td>Konsentrasi Keahlian</td>
-                    <td>{{ $data_nilai['kejuruan']['nilai'] }}</td>
-                    <td>{{ $data_nilai['kejuruan']['grade'] }}</td>
+                    <td class="border-data">4</td>
+                    <td class="border-data">Konsentrasi Keahlian</td>
+                    <td class="border-data">{{ $data_nilai['kejuruan']['nilai'] }}</td>
+                    <td class="border-data">{{ $data_nilai['kejuruan']['grade'] }}</td>
                 </tr>
                 <tr>
-                    <td>5</td>
-                    <td>Mata Pelajaran Pilihan</td>
-                    <td>{{ $data_nilai['pilihan']['nilai'] }}</td>
-                    <td>{{ $data_nilai['pilihan']['grade'] }}</td>
+                    <td class="border-data">5</td>
+                    <td class="border-data">Mata Pelajaran Pilihan</td>
+                    <td class="border-data">{{ $data_nilai['pilihan']['nilai'] }}</td>
+                    <td class="border-data">{{ $data_nilai['pilihan']['grade'] }}</td>
                 </tr>
                 <tr>
-                    <th></th>
-                    <th>Rata - rata</th>
-                    <td>{{ $data_nilai['rata_rata']['nilai'] }}</td>
-                    <td>{{ $data_nilai['rata_rata']['grade'] }}</td>
+                    <th class="border-data"></th>
+                    <th class="border-data">Rata - rata</th>
+                    <td class="border-data">{{ $data_nilai['rata_rata']['nilai'] }}</td>
+                    <td class="border-data">{{ $data_nilai['rata_rata']['grade'] }}</td>
                 </tr>
            </tbody>
         </table>
-
-    </h3>
 </center>
 @endsection

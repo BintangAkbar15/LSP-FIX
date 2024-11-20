@@ -16,8 +16,10 @@ class CheckUserRole
      */
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        if (!in_array(session('role'), $roles))
+        $userRole = ['Murid','Walas'];
+        if (!in_array(session('role'), $userRole))
         {
+            // dd($roles);
             abort(403, 'Unauthorized action.');
         } else {
             return $next($request);            

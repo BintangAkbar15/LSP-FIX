@@ -1,47 +1,68 @@
 @extends('layout.main')
-
+@section('name')
+    <h3>Edit Nilai {{ $siswa->nama_siswa }}</h3>
+@endsection
 @section('content')
-<center>
-    <h3>
-        Edit Nilai
-    </h3>
     @if (session('error'))
     <p class="text-danger">{{ session('error') }}</p>
     @endif
 
-    <form action="/nilai-raport/update/{{ $nilai->id }}" method="post">
+    <form class="form" action="/nilai-raport/update/{{ $nilai->id }}" method="post">
         @csrf
-        {{-- Dropdown untuk memilih Siswa --}}
-        <label for="siswa_id">Nama Siswa:</label>
-        <select name="siswa_id" id="siswa_id" required>
-            <option value="">Pilih Siswa</option>
-            @foreach($siswa as $each)
-                @if ($nilai->siswa_id == $each->id)
-                    <option value="{{ $each->id }}" selected>{{ $each->nama_siswa }}</option>                    
-                @else
-                    <option value="{{ $each->id }}">{{ $each->nama_siswa }}</option>
-                @endif
-            @endforeach
-        </select>
-        <br>
+        
+        {{-- Dropdown untuk memilih Siswa --}}  
 
-        {{-- Input nilai untuk setiap mata pelajaran, hanya angka --}}
-        <label for="matematika">Matematika:</label>
-        <input type="number" name="matematika" id="matematika" step="0.01" value="{{ $nilai->matematika }}" required>
-        <br>
-        <label for="indonesia">Indonesia:</label>
-        <input type="number" name="indonesia" id="indonesia" step="0.01" value="{{ $nilai->indonesia }}" required>
-        <br>
-        <label for="inggris">Inggris:</label>
-        <input type="number" name="inggris" id="inggris" step="0.01" value="{{ $nilai->inggris }}" required>
-        <br>
-        <label for="kejuruan">Kejuruan:</label>
-        <input type="number" name="kejuruan" id="kejuruan" step="0.01" value="{{ $nilai->kejuruan }}" required>
-        <br>
-        <label for="pilihan">Pilihan:</label>
-        <input type="number" name="pilihan" id="pilihan" step="0.01" value="{{ $nilai->pilihan }}" required>
-        <br>
-        <button class="button-submit" type="submit">Ubah</button>
+        <table>
+            <tr class="position">
+                <td>
+                    <label for="siswa_id">Nama Siswa:</label>
+                </td>
+                <td>
+                    <input value="{{ $siswa->id }}" type="hidden" name="siswa_id" id="siswa_id" step="0.01" required>
+                    <input value="{{ $siswa->nama_siswa }}" type="text" step="0.01" readonly>
+                </td>
+            </tr>
+            <tr class="position">
+                <td>
+                    <label for="matematika">Matematika:</label>
+                </td>
+                <td>
+                    <input value="{{ $nilai->matematika }}" type="number" name="matematika" id="matematika" step="0.01" required>
+                </td>
+            </tr>
+            <tr class="position">
+                <td>
+                    <label for="indonesia">Indonesia:</label>
+                </td>
+                <td>
+                    <input value="{{ $nilai->indonesia }}" type="number" name="indonesia" id="indonesia" step="0.01" required>
+                </td>
+            </tr>
+            <tr class="position">
+                <td>
+                    <label for="inggris">Inggris:</label>
+                </td>
+                <td>
+                    <input value="{{ $nilai->inggris }}" type="number" name="inggris" id="inggris" step="0.01" required>
+                </td>
+            </tr>
+            <tr class="position">
+                <td>
+                    <label for="kejuruan">Kejuruan:</label>
+                </td>
+                <td>
+                    <input value="{{ $nilai->kejuruan }}" type="number" name="kejuruan" id="kejuruan" step="0.01" required>
+                </td>
+            </tr>
+            <tr class="position">
+                <td>
+                    <label for="pilihan">Pilihan:</label>
+                </td>
+                <td>
+                    <input value="{{ $nilai->pilihan }}" type="number" name="pilihan" id="pilihan" step="0.01" required>
+                </td>
+            </tr>
+        </table>
+        <button class="button-submit" type="submit">Simpan</button>
     </form>
-</center>
 @endsection
